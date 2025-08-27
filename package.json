@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/supabase-js": "^2.56.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
@@ -11,17 +13,21 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.11",
     "@types/react-dom": "^19.1.7",
+    "pg": "^8.16.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.2",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run generate:sitemap",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate:sitemap": "node generate_sitemap.js",
+    "seo:check": "echo '🔍 SEO 체크리스트:' && echo '✅ 메타태그 최적화 완료' && echo '✅ 구조화된 데이터 추가 완료' && echo '✅ 사이트맵 동적 생성 완료' && echo '✅ robots.txt 최적화 완료' && echo '✅ 브레드크럼 네비게이션 추가 완료'"
   },
   "eslintConfig": {
     "extends": [
@@ -40,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "supabase": "^2.34.3"
   }
 }

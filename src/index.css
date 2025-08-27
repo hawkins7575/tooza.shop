@@ -1,13 +1,517 @@
+
+/* Inter 폰트 임포트 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* CSS 변수 정의 */
+:root {
+  /* Primary Colors */
+  --color-primary-25: #fbfcff;
+  --color-primary-50: #f0f4ff;
+  --color-primary-100: #e0edff;
+  --color-primary-200: #c7dbff;
+  --color-primary-300: #a4c1ff;
+  --color-primary-400: #7d9dff;
+  --color-primary-500: #5b7bff;
+  --color-primary-600: #4d61f5;
+  --color-primary-700: #424ae6;
+  --color-primary-800: #3539d1;
+  --color-primary-900: #2d2fa7;
+  --color-primary-950: #1e1f5c;
+  
+  /* Neutral Colors */
+  --color-neutral-0: #ffffff;
+  --color-neutral-25: #fdfdfd;
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+  --color-neutral-950: #0a0a0a;
+  
+  /* Semantic Colors */
+  --color-success-50: #ecfdf5;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-warning-50: #fffbeb;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-error-50: #fef2f2;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-info-50: #f1f5f9;
+  --color-info-500: #475569;
+  --color-info-600: #334155;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #5b7bff 0%, #4d61f5 50%, #424ae6 100%);
+  --gradient-primary-soft: linear-gradient(135deg, #f0f4ff 0%, #e0edff 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  
+  /* Typography */
+  --font-family-sans: 'Inter', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-display: 'Inter', 'Pretendard', system-ui, sans-serif;
+  
+  /* Spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  
+  /* Border Radius */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 0.75rem;
+  --border-radius-xl: 1rem;
+  --border-radius-2xl: 1.25rem;
+  --border-radius-3xl: 1.5rem;
+  --border-radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-primary: 0 10px 15px -3px rgba(91, 123, 255, 0.2), 0 4px 6px -4px rgba(91, 123, 255, 0.2);
+  
+  /* Animation */
+  --duration-fast: 0.2s;
+  --duration-normal: 0.3s;
+  --duration-slow: 0.5s;
+  --easing-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --easing-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* 레거시 변수 호환성 */
+  --primary: var(--color-primary-600);
+  --secondary: var(--color-neutral-500);
+  --success: var(--color-success-600);
+  --warning: var(--color-warning-500);
+  --danger: var(--color-error-500);
+  --background: var(--color-neutral-50);
+  --surface: var(--color-neutral-0);
+  --text: var(--color-neutral-900);
+  --text-muted: var(--color-neutral-500);
+}
+
+/* 기본 스타일 리셋 및 설정 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-family-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-neutral-900);
+  background: linear-gradient(135deg, var(--color-neutral-25) 0%, var(--color-neutral-50) 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+  min-height: 100vh;
+}
+
+/* 애니메이션 */
+@keyframes spin {
+  0% { 
+    transform: rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+
+@keyframes fadeIn {
+  0% { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideUp {
+  0% { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.9); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Fira Code', 'Roboto Mono', monospace;
+  background-color: var(--color-neutral-100);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.875em;
+}
+
+/* 모던 유틸리티 클래스 */
+.fade-in {
+  animation: fadeIn var(--duration-normal) var(--easing-smooth);
+}
+
+.slide-up {
+  animation: slideUp var(--duration-normal) var(--easing-smooth);
+}
+
+.scale-in {
+  animation: scaleIn var(--duration-normal) var(--easing-smooth);
+}
+
+/* 버튼 공통 스타일 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--border-radius-lg);
+  font-family: var(--font-family-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--easing-smooth);
+  outline: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--color-neutral-0);
+  box-shadow: var(--shadow-primary);
+  transform: translateY(0);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #424ae6 0%, #3539d1 100%);
+  box-shadow: 0 8px 15px -3px rgba(91, 123, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--color-neutral-0);
+  color: var(--color-neutral-700);
+  border: 2px solid var(--color-neutral-200);
+  transform: translateY(0);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-neutral-25);
+  border-color: var(--color-neutral-300);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-base);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-neutral-600);
+  border: none;
+}
+
+.btn-ghost:hover {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-900);
+}
+
+/* 카드 스타일 */
+.card {
+  background-color: var(--color-neutral-0);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-base);
+  border: 1px solid var(--color-neutral-200);
+  overflow: hidden;
+  transition: all var(--duration-normal) var(--easing-smooth);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.card-elevated {
+  background-color: var(--color-neutral-0);
+  border-radius: var(--border-radius-2xl);
+  box-shadow: var(--shadow-lg);
+  border: none;
+  overflow: hidden;
+  transition: all var(--duration-normal) var(--easing-smooth);
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-base);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: all var(--duration-normal) var(--easing-smooth);
+}
+
+/* 입력 필드 스타일 */
+.input {
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--border-radius-lg);
+  font-size: 0.875rem;
+  border: 2px solid var(--color-neutral-200);
+  background-color: var(--color-neutral-0);
+  color: var(--color-neutral-900);
+  transition: all var(--duration-fast) var(--easing-smooth);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(91, 123, 255, 0.1);
+}
+
+.input::placeholder {
+  color: var(--color-neutral-400);
+}
+
+/* 모바일 최적화 */
+@media (max-width: 1024px) {
+  /* 태블릿 최적화 */
+  .hero-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.125rem !important;
+  }
+  
+  .stats-section {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* 모바일 기본 */
+  body {
+    font-size: 0.875rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem !important;
+    line-height: 1.1 !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem !important;
+    margin-bottom: 2rem !important;
+  }
+  
+  .stats-section {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-4) !important;
+    margin: 0 auto 2rem !important;
+    max-width: 300px !important;
+  }
+  
+  .site-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: var(--spacing-4) !important;
+  }
+  
+  .filter-panel {
+    width: 100% !important;
+    margin-bottom: var(--spacing-4);
+  }
+  
+  .main-content {
+    padding: var(--spacing-4) var(--spacing-2) !important;
+  }
+
+  .btn {
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: 0.875rem;
+    min-height: 44px; /* iOS 터치 타겟 권장 크기 */
+  }
+  
+  .input {
+    min-height: 44px; /* iOS 터치 타겟 권장 크기 */
+    font-size: 16px; /* iOS 줌 방지 */
+  }
+  
+  .content-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: var(--spacing-3) !important;
+  }
+  
+  .content-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .search-section {
+    padding: var(--spacing-4) !important;
+  }
+  
+  .sidebar {
+    gap: var(--spacing-4) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* 작은 모바일 */
+  .hero-title {
+    font-size: 1.75rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.9375rem !important;
+  }
+  
+  .site-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-3) !important;
+  }
+  
+  .main-content {
+    padding: var(--spacing-2) var(--spacing-2) !important;
+  }
+
+  .card {
+    border-radius: var(--border-radius-lg);
+  }
+
+  .btn {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: 0.8125rem;
+  }
+  
+  .hero-section {
+    padding: var(--spacing-8) var(--spacing-4) var(--spacing-6) !important;
+  }
+  
+  .content-wrapper {
+    gap: var(--spacing-4) !important;
+  }
+  
+  .search-section {
+    padding: var(--spacing-3) !important;
+  }
+  
+  .filter-panel .panel-container {
+    padding: var(--spacing-4) !important;
+  }
+  
+  .category-item {
+    padding: var(--spacing-2) var(--spacing-3) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 매우 작은 모바일 */
+  .hero-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.875rem !important;
+  }
+  
+  .stats-section {
+    max-width: 250px !important;
+  }
+  
+  .content-wrapper {
+    padding: var(--spacing-4) var(--spacing-2) !important;
+  }
+  
+  .btn {
+    font-size: 0.75rem;
+    padding: var(--spacing-2);
+  }
+}
+
+
+/* SEO 및 성능 최적화 */
+img {
+  max-width: 100%;
+  height: auto;
+  loading: lazy;
+  decoding: async;
+}
+
+/* 접근성 개선 */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-100);
+  border-radius: var(--border-radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: var(--border-radius-full);
+  transition: background-color var(--duration-fast) var(--easing-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}
+
+/* 선택 텍스트 스타일 */
+::selection {
+  background-color: rgba(91, 123, 255, 0.2);
+  color: var(--color-neutral-900);
 }

@@ -1,3 +1,27 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# SEO 최적화된 사이트맵
+Sitemap: https://finance-link.com/sitemap.xml
+
+# 크롤링 제외 경로
+Disallow: /admin
+Disallow: /api/
+Disallow: /private/
+Disallow: /*?*
+Disallow: /dashboard/private/
+Disallow: /user/
+
+# 허용 경로 명시
+Allow: /blog/
+Allow: /dashboard/
+Allow: /about/
+Allow: /bookmarks/
