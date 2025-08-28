@@ -171,12 +171,17 @@ export function HomePage() {
 
           // 로그인된 사용자의 경우 북마크 정보 추가
           if (user) {
-            const { data: bookmarks } = await supabase
-              .from('youtube_bookmarks')
-              .select('channel_id')
-              .eq('user_id', user.id)
-            
-            const bookmarkedChannelIds = new Set(bookmarks?.map(b => b.channel_id) || [])
+            let bookmarkedChannelIds = new Set()
+            try {
+              const { data: bookmarks } = await supabase
+                .from('youtube_bookmarks')
+                .select('channel_id')
+                .eq('user_id', user.id)
+              
+              bookmarkedChannelIds = new Set(bookmarks?.map(b => b.channel_id) || [])
+            } catch (error) {
+              console.warn('YouTube bookmarks table not available:', error)
+            }
             
             filteredChannels = filteredChannels.map(channel => ({
               ...channel,
@@ -270,13 +275,27 @@ export function HomePage() {
 
         // 로그인된 사용자의 경우 북마크 정보 추가
         if (user) {
-          const [sitesBookmarks, youtubeBookmarks] = await Promise.all([
-            supabase.from('bookmarks').select('site_id').eq('user_id', user.id),
-            supabase.from('youtube_bookmarks').select('channel_id').eq('user_id', user.id)
-          ])
+          let bookmarkedSiteIds = new Set()
+          let bookmarkedChannelIds = new Set()
           
-          const bookmarkedSiteIds = new Set(sitesBookmarks.data?.map(b => b.site_id) || [])
-          const bookmarkedChannelIds = new Set(youtubeBookmarks.data?.map(b => b.channel_id) || [])
+          try {
+            const [sitesBookmarks, youtubeBookmarks] = await Promise.all([
+              supabase.from('bookmarks').select('site_id').eq('user_id', user.id),
+              supabase.from('youtube_bookmarks').select('channel_id').eq('user_id', user.id).throwOnError()
+            ])
+            
+            bookmarkedSiteIds = new Set(sitesBookmarks.data?.map(b => b.site_id) || [])
+            bookmarkedChannelIds = new Set(youtubeBookmarks.data?.map(b => b.channel_id) || [])
+          } catch (error) {
+            console.warn('Error loading bookmarks:', error)
+            // 사이트 북마크만 로드
+            try {
+              const { data } = await supabase.from('bookmarks').select('site_id').eq('user_id', user.id)
+              bookmarkedSiteIds = new Set(data?.map(b => b.site_id) || [])
+            } catch (siteError) {
+              console.warn('Error loading site bookmarks:', siteError)
+            }
+          }
           
           allSites = allSites.map(site => ({
             ...site,
