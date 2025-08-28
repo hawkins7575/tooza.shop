@@ -11,7 +11,6 @@ interface BreadcrumbNavigationProps {
 }
 
 export function BreadcrumbNavigation({ items }: BreadcrumbNavigationProps) {
-  // 구조화된 데이터 생성
   const breadcrumbStructuredData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -32,7 +31,6 @@ export function BreadcrumbNavigation({ items }: BreadcrumbNavigationProps) {
         borderBottom: '1px solid #e5e7eb'
       }}
     >
-      {/* 구조화된 데이터 */}
       <script 
         type="application/ld+json" 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }} 

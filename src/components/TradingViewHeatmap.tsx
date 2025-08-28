@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface TradingViewHeatmapProps {
   width?: string
@@ -15,7 +15,7 @@ interface TradingViewHeatmapProps {
 }
 
 export function TradingViewHeatmap({
-  width = "100%",
+  width = "600",
   height = "600",
   colorTheme = "light",
   dataSource = "KOSPI",
@@ -62,8 +62,8 @@ export function TradingViewHeatmap({
           hasTopBar,
           isZoomEnabled,
           hasSymbolTooltip,
-          width: "100%",
-          height: parseInt(height)
+          width: width,
+          height: height
         }
 
         script.innerHTML = JSON.stringify(config)
@@ -109,12 +109,12 @@ export function TradingViewHeatmap({
         container.innerHTML = ''
       }
     }
-  }, [dataSource, grouping, blockSize, blockColor, locale, colorTheme, hasTopBar, isZoomEnabled, hasSymbolTooltip, height])
+  }, [dataSource, grouping, blockSize, blockColor, locale, colorTheme, hasTopBar, isZoomEnabled, hasSymbolTooltip, width, height])
 
   if (hasError) {
     return (
       <div style={{
-        width: '100%',
+        width: width + 'px',
         height: height + 'px',
         display: 'flex',
         alignItems: 'center',
@@ -166,7 +166,7 @@ export function TradingViewHeatmap({
         className="tradingview-widget-container" 
         ref={containerRef} 
         style={{
-          width: '100%',
+          width: width + 'px',
           height: height + 'px',
           minHeight: height + 'px'
         }}

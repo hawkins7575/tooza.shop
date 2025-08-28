@@ -28,20 +28,6 @@ export function FilterPanel({
   const [categories, setCategories] = useState<Category[]>([])
   const [youtubeCategories, setYoutubeCategories] = useState<Category[]>([])
 
-  // 카테고리별 색상 매핑
-  const getCategoryColor = (category: string) => {
-    const colors: { [key: string]: string } = {
-      '주식': '#3b82f6',
-      '채권': '#10b981', 
-      '부동산': '#f59e0b',
-      '암호화폐': '#8b5cf6',
-      '금융뉴스': '#ef4444',
-      '투자교육': '#06b6d4',
-      '경제분석': '#84cc16',
-      '투자도구': '#f97316'
-    }
-    return colors[category] || '#6b7280'
-  }
 
   useEffect(() => {
     fetchCategories()
@@ -51,13 +37,54 @@ export function FilterPanel({
   const fetchCategories = async () => {
     try {
       const client = supabase || mockSupabase
-      const { data, error } = await client
+      
+      // 카테고리와 사이트 수를 함께 조회
+      const { data: categoriesData, error } = await client
         .from('categories')
         .select('*')
         .order('sort_order', { ascending: true })
 
       if (error) throw error
-      if (data) setCategories(data)
+      
+      // 각 카테고리별 사이트 수 계산
+      const sitesResponse = await client
+        .from('sites')
+        .select('category')
+      
+      const siteCounts: Record<string, number> = {}
+      const sitesData = 'data' in sitesResponse ? sitesResponse.data : []
+      sitesData?.forEach((site: any) => {
+        siteCounts[site.category] = (siteCounts[site.category] || 0) + 1
+      })
+      
+      // 카테고리에 count 정보 추가
+      const categoriesWithCount = categoriesData?.map((category: any) => ({
+        ...category,
+        count: siteCounts[category.name] || 0
+      })) || []
+      
+      // 계층 구조 생성
+      const parentCategories: Category[] = []
+      const childrenMap: Record<string, Category[]> = {}
+      
+      categoriesWithCount.forEach((category: Category) => {
+        if (!category.parent_id) {
+          parentCategories.push(category)
+        } else {
+          if (!childrenMap[category.parent_id]) {
+            childrenMap[category.parent_id] = []
+          }
+          childrenMap[category.parent_id].push(category)
+        }
+      })
+      
+      // 상위 카테고리에 하위 카테고리 연결
+      const hierarchicalCategories = parentCategories.map(parent => ({
+        ...parent,
+        children: childrenMap[parent.id] || []
+      }))
+      
+      setCategories(hierarchicalCategories)
     } catch (error) {
       console.error('Error fetching categories:', error)
     }
@@ -66,47 +93,62 @@ export function FilterPanel({
   const fetchYouTubeCategories = async () => {
     try {
       const client = supabase || mockSupabase
-      const { data, error } = await client
+      
+      // 유튜브 카테고리와 채널 수를 함께 조회
+      const { data: ytCategoriesData, error } = await client
         .from('youtube_categories')
         .select('*')
-        .order('name', { ascending: true })
+        .order('sort_order', { ascending: true })
 
       if (error) throw error
-      if (data) {
-        const formattedData = data.map(cat => ({
-          id: cat.id,
-          name: cat.name,
-          count: 0,
-          icon: '▶️',
-          parent_id: null,
-          sort_order: 0
-        }))
-        setYoutubeCategories(formattedData)
-      }
+      
+      // 각 유튜브 카테고리별 채널 수 계산
+      const channelsResponse = await client
+        .from('youtube_channels')
+        .select('category')
+      
+      const channelCounts: Record<string, number> = {}
+      const channelsData = 'data' in channelsResponse ? channelsResponse.data : []
+      channelsData?.forEach((channel: any) => {
+        channelCounts[channel.category] = (channelCounts[channel.category] || 0) + 1
+      })
+      
+      // 유튜브 카테고리에 count 정보 추가
+      const formattedData = ytCategoriesData?.map((cat: any) => ({
+        id: cat.id,
+        name: cat.name,
+        count: channelCounts[cat.name] || 0,
+        icon: cat.icon || '▶️',
+        parent_id: null,
+        sort_order: cat.sort_order
+      })) || []
+      
+      setYoutubeCategories(formattedData)
     } catch (error) {
       console.error('Error fetching YouTube categories:', error)
     }
   }
 
-  const renderCategoryItem = (category: Category, isYoutube = false) => (
+  const renderCategoryItem = (category: Category, isYoutube = false, level = 0) => (
     <button
       key={category.id}
-      onClick={() => onCategoryChange(category.name)}
+      onClick={() => onCategoryChange(isYoutube ? `유튜브-${category.name}` : category.name)}
       style={{
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '12px 16px',
-        margin: '4px 0',
+        padding: '8px 12px',
+        paddingLeft: `${12 + level * 16}px`,
+        margin: '2px 0',
         backgroundColor: selectedCategory === category.name ? '#e0f2fe' : 'white',
-        border: selectedCategory === category.name ? '2px solid #0284c7' : '1px solid #e5e7eb',
-        borderRadius: '8px',
-        fontSize: '14px',
-        fontWeight: selectedCategory === category.name ? '600' : '400',
-        color: selectedCategory === category.name ? '#0284c7' : '#374151',
+        border: selectedCategory === category.name ? '1px solid #0284c7' : '1px solid #e5e7eb',
+        borderRadius: '6px',
+        fontSize: '13px',
+        fontWeight: selectedCategory === category.name ? '500' : '400',
+        color: selectedCategory === category.name ? '#0284c7' : level > 0 ? '#6b7280' : '#374151',
         cursor: 'pointer',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.15s ease',
         textAlign: 'left'
       }}
       onMouseOver={(e) => {
@@ -122,8 +164,11 @@ export function FilterPanel({
         }
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontSize: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {level > 0 && (
+          <span style={{ fontSize: '10px', color: '#9ca3af' }}>└</span>
+        )}
+        <span style={{ fontSize: '14px' }}>
           {isYoutube ? '▶️' : (category.icon || '📁')}
         </span>
         <span>{category.name}</span>
@@ -131,16 +176,38 @@ export function FilterPanel({
       <span style={{
         backgroundColor: selectedCategory === category.name ? '#0284c7' : '#9ca3af',
         color: 'white',
-        fontSize: '12px',
-        padding: '2px 8px',
-        borderRadius: '12px',
-        minWidth: '24px',
-        textAlign: 'center'
+        fontSize: '11px',
+        padding: '2px 6px',
+        borderRadius: '10px',
+        minWidth: '20px',
+        textAlign: 'center',
+        lineHeight: '1.2'
       }}>
         {category.count || 0}
       </span>
     </button>
   )
+
+  const renderHierarchicalCategories = (categories: Category[], level = 0): React.ReactElement[] => {
+    const result: React.ReactElement[] = []
+    
+    categories.forEach(category => {
+      // 상위 카테고리 렌더링
+      result.push(
+        <div key={category.id}>
+          {renderCategoryItem(category, false, level)}
+        </div>
+      )
+      
+      // 하위 카테고리 렌더링
+      if (category.children && category.children.length > 0) {
+        const childElements = renderHierarchicalCategories(category.children, level + 1)
+        result.push(...childElements)
+      }
+    })
+    
+    return result
+  }
 
   return (
     <div style={{
@@ -203,7 +270,7 @@ export function FilterPanel({
       {/* Categories */}
       <div style={{
         flex: 1,
-        padding: '16px',
+        padding: '12px',
         overflowY: 'auto'
       }}>
         {/* All Category */}
@@ -214,38 +281,38 @@ export function FilterPanel({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '12px 16px',
-            margin: '0 0 16px 0',
+            padding: '8px 12px',
+            margin: '0 0 12px 0',
             backgroundColor: selectedCategory === '' ? '#e0f2fe' : 'white',
-            border: selectedCategory === '' ? '2px solid #0284c7' : '1px solid #e5e7eb',
-            borderRadius: '8px',
-            fontSize: '14px',
-            fontWeight: selectedCategory === '' ? '600' : '400',
+            border: selectedCategory === '' ? '1px solid #0284c7' : '1px solid #e5e7eb',
+            borderRadius: '6px',
+            fontSize: '13px',
+            fontWeight: selectedCategory === '' ? '500' : '400',
             color: selectedCategory === '' ? '#0284c7' : '#374151',
             cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            transition: 'all 0.15s ease'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '16px' }}>🏠</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '14px' }}>🏠</span>
             <span>전체</span>
           </div>
         </button>
 
         {/* Main Categories */}
         {categories.length > 0 && (
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '18px' }}>
             <h3 style={{
-              margin: '0 0 12px 0',
-              fontSize: '14px',
+              margin: '0 0 8px 0',
+              fontSize: '12px',
               fontWeight: '600',
               color: '#6b7280',
               textTransform: 'uppercase',
-              letterSpacing: '0.5px'
+              letterSpacing: '0.3px'
             }}>
               주요 카테고리
             </h3>
-            {categories.map(category => renderCategoryItem(category))}
+            {renderHierarchicalCategories(categories)}
           </div>
         )}
 
@@ -253,12 +320,12 @@ export function FilterPanel({
         {youtubeCategories.length > 0 && (
           <div>
             <h3 style={{
-              margin: '0 0 12px 0',
-              fontSize: '14px',
+              margin: '0 0 8px 0',
+              fontSize: '12px',
               fontWeight: '600',
               color: '#6b7280',
               textTransform: 'uppercase',
-              letterSpacing: '0.5px'
+              letterSpacing: '0.3px'
             }}>
               유튜브 카테고리
             </h3>

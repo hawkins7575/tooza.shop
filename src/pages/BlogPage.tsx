@@ -285,7 +285,7 @@ export function BlogPage() {
                         gap: '0.5rem',
                         marginBottom: '1.5rem'
                       }}>
-                        {Object.values(post.categories).slice(0, 3).map(category => (
+                        {Object.values(post.categories || {}).slice(0, 3).map((category: any) => (
                           <span
                             key={category.ID}
                             style={{

@@ -179,7 +179,7 @@ export function BoardPage() {
               </label>
               <RichTextEditor
                 value={writeForm.content}
-                onChange={(value) => setWriteForm({ ...writeForm, content: value })}
+                onChange={(value: string) => setWriteForm({ ...writeForm, content: value })}
                 placeholder="내용을 입력하세요. 마크다운 문법을 사용하거나 툴바를 이용해 서식을 적용할 수 있습니다."
                 minHeight="400px"
               />

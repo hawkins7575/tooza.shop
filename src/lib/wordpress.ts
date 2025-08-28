@@ -191,13 +191,6 @@ export async function fetchWordPressPost(postId: string): Promise<WordPressPost>
 }
 
 /**
- * 투자 관련 카테고리 목록을 반환합니다
- */
-export async function fetchWordPressCategories(): Promise<WordPressCategory[]> {
-  return investmentCategories
-}
-
-/**
  * HTML 태그를 제거하고 텍스트만 추출합니다
  */
 export function stripHtmlTags(html: string): string {
@@ -215,18 +208,6 @@ export function createExcerpt(content: string, maxLength: number = 150): string 
   const lastSpace = truncated.lastIndexOf(' ')
   
   return lastSpace > 0 ? truncated.substring(0, lastSpace) + '...' : truncated + '...'
-}
-
-/**
- * 날짜를 한국어 형식으로 포맷합니다
- */
-export function formatKoreanDate(dateString: string): string {
-  const date = new Date(dateString)
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  
-  return `${year}년 ${month}월 ${day}일`
 }
 
 /**

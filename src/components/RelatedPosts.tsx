@@ -22,7 +22,6 @@ export function RelatedPosts({ currentPostId, currentPostTitle }: RelatedPostsPr
     if (!supabase) return
 
     try {
-      // 현재 글과 다른 글들 중에서 3개 가져오기 (간단한 관련성 로직)
       const { data, error } = await supabase
         .from('blog_posts')
         .select('id, title, slug, content, created_at')
